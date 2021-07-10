@@ -3,8 +3,9 @@
     "baseUrl": ".",
     "paths": {
       "@functions/*": ["src/functions/*"],
+      "@resources/*": ["src/resources/*"],
       "@utils": ["src/utils/index"],
-      "@types/*": ["src/types/index"]
+      "@types": ["src/types/index"]
     }
   }
 }

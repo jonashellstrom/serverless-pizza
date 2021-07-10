@@ -3,7 +3,7 @@ import type { Pie } from "./pie"
 type TimestampInISO = string
 type AmountInCents = number
 
-enum OrderStatus {
+export enum OrderStatus {
   initiated = "initiated",
   confirmedByStore = "confirmed_by_store",
   cancelledByStore = "cancelled_by_store",

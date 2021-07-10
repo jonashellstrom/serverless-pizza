@@ -1,6 +1,8 @@
 import type { AWS } from "@serverless/typescript"
 
 import helloWorld from "@functions/helloWorld"
+import storeTable from "@resources/storeTable"
+import orderTable from "@resources/orderTable"
 
 const serverlessConfiguration: AWS = {
   service: "serverless-pizza",
@@ -11,7 +13,11 @@ const serverlessConfiguration: AWS = {
       includeModules: true,
     },
   },
-  plugins: ["serverless-webpack"],
+  plugins: [
+    "serverless-webpack",
+    "serverless-export-env",
+    "serverless-iam-roles-per-function",
+  ],
   provider: {
     name: "aws",
     region: "ca-central-1",
@@ -23,10 +29,18 @@ const serverlessConfiguration: AWS = {
     },
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1",
+      STORE_TABLE_NAME: "store-table-${self:provider.stage}",
+      ORDER_TABLE_NAME: "order-table-${self:provider.stage}",
     },
     lambdaHashingVersion: "20201221",
   },
   functions: { helloWorld },
+  resources: {
+    Resources: {
+      ...storeTable,
+      ...orderTable,
+    },
+  },
 }
 
 module.exports = serverlessConfiguration
