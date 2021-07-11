@@ -33,6 +33,9 @@ const serverlessConfiguration: AWS = {
       KMS_KEY_ID: "REPLACE_ME",
       STORE_TABLE_NAME: "store-table-${self:provider.stage}",
       ORDER_TABLE_NAME: "order-table-${self:provider.stage}",
+      OPENROUTE_URL: "https://api.openrouteservice.org/v2/",
+      OPENROUTE_API_KEY_SSM_NAME:
+        "/${self:service}-${self:provider.stage}/openrouteservice-api-key",
     },
     lambdaHashingVersion: "20201221",
     iamRoleStatements: [
