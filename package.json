@@ -4,7 +4,8 @@
   "description": "Pizza ordering and tracking with Step Functions orchestrator",
   "main": "serverless.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "export-env": "sls export-env"
   },
   "engines": {
     "node": ">=14.15.0"
@@ -13,6 +14,7 @@
     "@middy/core": "1.5.2",
     "@middy/http-json-body-parser": "1.5.2",
     "@middy/validator": "2.4.3",
+    "axios": "0.21.1",
     "source-map-support": "0.5.19"
   },
   "devDependencies": {
@@ -22,6 +24,8 @@
     "aws-sdk": "2.943.0",
     "json-schema-to-ts": "1.5.0",
     "serverless": "2.23.0",
+    "serverless-export-env": "2.0.0",
+    "serverless-iam-roles-per-function": "3.2.0",
     "serverless-webpack": "5.3.5",
     "ts-loader": "8.0.15",
     "ts-node": "9.1.1",
