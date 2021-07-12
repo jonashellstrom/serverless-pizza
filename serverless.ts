@@ -1,6 +1,7 @@
 import type { AWS } from "@serverless/typescript"
 
 import helloWorld from "@functions/helloWorld"
+import placeOrder from "@functions/placeOrder"
 import storeTable from "@resources/storeTable"
 import orderTable from "@resources/orderTable"
 
@@ -72,7 +73,7 @@ const serverlessConfiguration: AWS = {
       },
     ],
   },
-  functions: { helloWorld },
+  functions: { helloWorld, placeOrder },
   resources: {
     Resources: {
       ...storeTable,

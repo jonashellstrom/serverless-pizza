@@ -37,3 +37,9 @@ aws dynamodb put-item \
 - In order to use it, you need to provide your own API key and host it on the AWS SSM Parameter Store (encrypted using a KMS key).
   - The SSM Parameter Name should be stored in the `OPENROUTE_API_KEY_SSM_NAME` environment variable.
   - The KMS Key ID should be stored in the `KMS_KEY_ID` environment variable.
+
+## Endpoints
+
+These endpoints provide functionality to create new orders, track the status of an existing order and adding a tip to an existing order.
+
+- [Place New Order](docs/rest-api/place-order.md) : `POST /order/`

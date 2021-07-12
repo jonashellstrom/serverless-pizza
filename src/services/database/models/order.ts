@@ -5,7 +5,7 @@ export type OrderModel = DeliveryOrder
 
 const tableName = process.env.ORDER_TABLE_NAME
 
-const save = async (order: OrderModel): Promise<boolean> => {
+const save = async (order: OrderModel): Promise<void> => {
   try {
     await dynamodb
       .put({
@@ -15,11 +15,8 @@ const save = async (order: OrderModel): Promise<boolean> => {
         },
       })
       .promise()
-
-    return true
   } catch (error) {
-    console.error("Error saving order to order-table: ", error)
-    return false
+    throw error
   }
 }
 const getById = async (orderId: string): Promise<OrderModel | null> => {

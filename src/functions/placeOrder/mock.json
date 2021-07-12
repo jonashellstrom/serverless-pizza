@@ -1,0 +1,6 @@
+{
+  "headers": {
+    "Content-Type": "application/json"
+  },
+  "body": "{\"storeId\":\"ouudJiBWJd0HQUafMVLvX\",\"paymentId\":\"Q2N_R4yoDzki50LXRQmyi\",\"pies\":[{\"size\":\"medium\",\"cheese\":\"medium\",\"toppings\":[\"pepperoni\",\"greenPepper\",\"onion\"]}],\"deliveryAddress\":{\"coordinates\":{\"latitude\":51.04127158888242,\"longitude\":-114.06902572788017},\"streetAddress\":\"1221 2 St SW\",\"city\":\"Calgary\",\"postalCode\":\"T2R 0W5\",\"province\":\"AB\"}}"
+}
