@@ -1,5 +1,6 @@
-import type { Pie } from "./pie"
+import type { Coordinates, Pie, Step } from "@types"
 
+type Nanoid = string
 type TimestampInISO = string
 type AmountInCents = number
 
@@ -14,15 +15,17 @@ export enum OrderStatus {
 }
 
 type Order = {
-  orderId: string
-  storeId: string
+  orderId: Nanoid
+  storeId: Nanoid
+  paymentId: Nanoid
   status: OrderStatus
   pies: Pie[]
-  price: AmountInCents
   tipPaid: AmountInCents | null
+  createdAt: TimestampInISO
 }
 
 type Address = {
+  coordinates: Coordinates
   streetAddress: string
   city: string
   postalCode: string
@@ -34,6 +37,7 @@ export type DeliveryOrder = Order & {
   dispatchEstimatedAt: TimestampInISO
   deliveryEstimatedAt: TimestampInISO
   deliveredAt: TimestampInISO | null
+  deliverySteps: Step[]
 }
 
 export type PickupOrder = Order & {
