@@ -1,7 +1,6 @@
 import { NetworkClient } from "@services"
 import { Coordinates } from "@types"
 import { ssm } from "@utils"
-
 import { GetDirectionsResponse } from "./types"
 
 export class DirectionsService {
@@ -15,7 +14,7 @@ export class DirectionsService {
   public async getDirections(
     storeCoordinates: Coordinates,
     deliveryCoordinates: Coordinates
-  ): Promise<GetDirectionsResponse> {
+  ): Promise<GetDirectionsResponse["features"][number]["properties"]> {
     const apiKey = await ssm.getParameter({
       Name: process.env.OPENROUTE_API_KEY_SSM_NAME,
       WithDecryption: true,
@@ -28,6 +27,6 @@ export class DirectionsService {
     const response = await this.networkClient.get<GetDirectionsResponse>(
       requestURL
     )
-    return response.data
+    return response.data.features[0].properties
   }
 }
