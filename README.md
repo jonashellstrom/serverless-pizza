@@ -2,19 +2,19 @@
 
 ## Installation/deployment instructions
 
-Depending on your preferred package manager, follow the instructions below to deploy your project.
+Depending on your preferred package manager, follow the instructions below to deploy the project.
 
 > **Requirements**: NodeJS `lts/fermium (v.14.15.0)`. If you're using [nvm](https://github.com/nvm-sh/nvm), run `nvm use` to ensure you're using the same Node version in local and in your lambda's runtime.
 
 ### Using NPM 📦
 
 - Run `npm i` to install the project dependencies
-- Run `npx sls deploy` to deploy this stack to AWS
+- Run `npx sls deploy` to deploy the stack to AWS
 
 ### Using Yarn 🧶
 
 - Run `yarn` to install the project dependencies
-- Run `yarn sls deploy` to deploy this stack to AWS
+- Run `yarn sls deploy` to deploy the stack to AWS
 
 ## Seeding the Store Table
 
@@ -33,7 +33,7 @@ aws dynamodb put-item \
 
 ## Using the Directions Service
 
-- This Directions Service uses the [openrouteservice](https://openrouteservice.org) API to retrieve directions and delivery ETAs.
+- The Directions Service uses the [openrouteservice](https://openrouteservice.org) API to retrieve directions and delivery ETAs.
 - In order to use it, you need to provide your own API key and host it on the AWS SSM Parameter Store (encrypted using a KMS key).
   - The SSM Parameter Name should be stored in the `OPENROUTE_API_KEY_SSM_NAME` environment variable.
   - The KMS Key ID should be stored in the `KMS_KEY_ID` environment variable.
