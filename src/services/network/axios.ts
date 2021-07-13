@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, AxiosResponse } from "axios"
 
-export class NetworkClient {
+export default class NetworkService {
   private client: AxiosInstance
 
   constructor(baseURL: string) {

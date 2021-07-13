@@ -1,14 +1,14 @@
-import { NetworkClient } from "@services"
+import { NetworkService } from "@services"
 import { Coordinates } from "@types"
 import { ssm } from "@utils"
 import { GetDirectionsResponse } from "./types"
 
 export class DirectionsService {
-  private networkClient: NetworkClient
+  private networkClient: NetworkService
   static serviceBaseURL = process.env.OPENROUTE_URL
 
   constructor() {
-    this.networkClient = new NetworkClient(DirectionsService.serviceBaseURL)
+    this.networkClient = new NetworkService(DirectionsService.serviceBaseURL)
   }
 
   public async getDirections(
