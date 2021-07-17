@@ -28,9 +28,9 @@ export const orderStateMachine = {
             Next: "MarkOrderAsDeclined",
           },
         ],
-        Next: "MarkOrderAsConfirmed",
+        Next: "MarkOrderAsAccepted",
       },
-      MarkOrderAsConfirmed: {
+      MarkOrderAsAccepted: {
         Type: "Task",
         ResultPath: null,
         Resource: "arn:aws:states:::dynamodb:updateItem",
@@ -39,12 +39,12 @@ export const orderStateMachine = {
           Key: {
             orderId: { "S.$": "$.orderId" },
           },
-          UpdateExpression: "SET #status = :confirmed_by_store",
+          UpdateExpression: "SET #status = :accepted_by_store",
           ExpressionAttributeNames: {
             "#status": "status",
           },
           ExpressionAttributeValues: {
-            ":confirmed_by_store": { S: "confirmed_by_store" },
+            ":accepted_by_store": { S: "accepted_by_store" },
           },
         },
         Next: "NotifyDriver",
