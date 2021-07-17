@@ -16,6 +16,7 @@
     "@middy/validator": "2.4.3",
     "axios": "0.21.1",
     "nanoid": "2.1.11",
+    "serverless-step-functions": "2.32.0",
     "source-map-support": "0.5.19"
   },
   "devDependencies": {

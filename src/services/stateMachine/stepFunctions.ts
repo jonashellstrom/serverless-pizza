@@ -2,20 +2,18 @@ import * as StepFunctions from "aws-sdk/clients/stepfunctions"
 
 export default class StateMachineService {
   private sf: StepFunctions
+  public stateMachineArn: string
 
-  constructor() {
+  constructor(stateMachineArn: string) {
     this.sf = new StepFunctions()
+    this.stateMachineArn = stateMachineArn
   }
 
-  public async start<T>(args: {
-    stateMachineArn: string
-    name: string
-    input: T
-  }) {
-    const { stateMachineArn, name, input } = args
+  public async start<T>(args: { name: string; input: T }) {
+    const { name, input } = args
     await this.sf
       .startExecution({
-        stateMachineArn,
+        stateMachineArn: this.stateMachineArn,
         name,
         input: JSON.stringify(input),
       })
