@@ -21,6 +21,19 @@ const notifyStoreQueueOrderTopicSubscription: AWS["resources"]["Resources"] = {
   },
 }
 
+const notifyDriverQueueOrderTopicSubscription: AWS["resources"]["Resources"] = {
+  NotifyDriverQueueSubscription: {
+    Type: "AWS::SNS::Subscription",
+    Properties: {
+      TopicArn: { Ref: "OrderTopic" },
+      Protocol: "sqs",
+      Endpoint: { "Fn::GetAtt": ["NotifyDriverQueue", "Arn"] },
+      FilterPolicy: { event: ["order_started"] },
+    },
+  },
+}
+
 export const orderTopicSubscriptions = {
   ...notifyStoreQueueOrderTopicSubscription,
+  ...notifyDriverQueueOrderTopicSubscription,
 }

@@ -47,6 +47,24 @@ export const orderStateMachine = {
             ":confirmed_by_store": { S: "confirmed_by_store" },
           },
         },
+        Next: "NotifyDriver",
+      },
+      NotifyDriver: {
+        Type: "Task",
+        OutputPath: "$",
+        Resource: "arn:aws:states:::sns:publish",
+        Parameters: {
+          TopicArn: { Ref: "OrderTopic" },
+          Message: {
+            "Input.$": "$",
+          },
+          MessageAttributes: {
+            event: {
+              DataType: "String",
+              StringValue: "order_started",
+            },
+          },
+        },
         Next: "FinishOrder",
       },
       CancelOrder: {
