@@ -1,8 +1,14 @@
 import type { AWS } from "@serverless/typescript"
 
 import placeOrder from "@functions/placeOrder"
-import storeTable from "@resources/storeTable"
-import orderTable from "@resources/orderTable"
+import orderDecision from "@functions/orderDecision"
+import {
+  orderTable,
+  storeTable,
+  notifyStoreQueue,
+  notifyStoreTopic,
+  orderStateMachine,
+} from "@resources"
 
 const serverlessConfiguration: AWS = {
   service: "serverless-pizza",
@@ -17,6 +23,7 @@ const serverlessConfiguration: AWS = {
     "serverless-webpack",
     "serverless-export-env",
     "serverless-iam-roles-per-function",
+    "serverless-step-functions",
   ],
   provider: {
     name: "aws",
@@ -33,6 +40,8 @@ const serverlessConfiguration: AWS = {
       KMS_KEY_ID: "REPLACE_ME",
       STORE_TABLE_NAME: "store-table-${self:provider.stage}",
       ORDER_TABLE_NAME: "order-table-${self:provider.stage}",
+      ORDER_STATE_MACHINE_ARN:
+        "${self:resources.Outputs.OrderStateMachineARN.Value}",
       OPENROUTE_URL: "https://api.openrouteservice.org/v2/",
       OPENROUTE_API_KEY_SSM_NAME:
         "/${self:service}-${self:provider.stage}/openrouteservice-api-key",
@@ -72,11 +81,23 @@ const serverlessConfiguration: AWS = {
       },
     ],
   },
-  functions: { placeOrder },
+  functions: { placeOrder, orderDecision },
+  // @ts-ignore
+  stepFunctions: {
+    stateMachines: { orderStateMachine },
+  },
   resources: {
     Resources: {
       ...storeTable,
       ...orderTable,
+      ...notifyStoreQueue,
+      ...notifyStoreTopic,
+    },
+    Outputs: {
+      OrderStateMachineARN: {
+        Description: "The ARN of the order state machine",
+        Value: { Ref: "OrderStateMachine" },
+      },
     },
   },
 }
