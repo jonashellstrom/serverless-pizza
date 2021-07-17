@@ -1,6 +1,6 @@
 import { AWS } from "@serverless/typescript"
 
-const storeTable: AWS["resources"]["Resources"] = {
+export const storeTable: AWS["resources"]["Resources"] = {
   StoreTable: {
     Type: "AWS::DynamoDB::Table",
     Properties: {
@@ -21,5 +21,3 @@ const storeTable: AWS["resources"]["Resources"] = {
     },
   },
 }
-
-export default storeTable

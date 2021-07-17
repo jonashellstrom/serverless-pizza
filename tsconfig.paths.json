@@ -3,7 +3,7 @@
     "baseUrl": ".",
     "paths": {
       "@functions/*": ["src/functions/*"],
-      "@resources/*": ["src/resources/*"],
+      "@resources": ["src/resources/index"],
       "@services": ["src/services/index"],
       "@utils": ["src/utils/index"],
       "@types": ["src/types/index"]
