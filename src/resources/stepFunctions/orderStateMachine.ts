@@ -25,7 +25,7 @@ export const orderStateMachine = {
         Catch: [
           {
             ErrorEquals: ["OrderDeclined"],
-            Next: "CancelOrder",
+            Next: "MarkOrderAsDeclined",
           },
         ],
         Next: "MarkOrderAsConfirmed",
@@ -48,6 +48,25 @@ export const orderStateMachine = {
           },
         },
         Next: "NotifyDriver",
+      },
+      MarkOrderAsDeclined: {
+        Type: "Task",
+        ResultPath: null,
+        Resource: "arn:aws:states:::dynamodb:updateItem",
+        Parameters: {
+          TableName: { Ref: "OrderTable" },
+          Key: {
+            orderId: { "S.$": "$.orderId" },
+          },
+          UpdateExpression: "SET #status = :declined_by_store",
+          ExpressionAttributeNames: {
+            "#status": "status",
+          },
+          ExpressionAttributeValues: {
+            ":declined_by_store": { S: "declined_by_store" },
+          },
+        },
+        Next: "CancelOrder",
       },
       NotifyDriver: {
         Type: "Task",

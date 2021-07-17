@@ -7,7 +7,7 @@ type AmountInCents = number
 export enum OrderStatus {
   initiated = "initiated",
   confirmedByStore = "confirmed_by_store",
-  cancelledByStore = "cancelled_by_store",
+  declinedByStore = "declined_by_store",
   preparing = "preparing",
   waitingforDriver = "waiting_for_driver",
   outForDelivery = "out_for_delivery",
