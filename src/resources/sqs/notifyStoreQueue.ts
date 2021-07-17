@@ -33,7 +33,7 @@ export const notifyStoreQueue: AWS["resources"]["Resources"] = {
             Action: "sqs:SendMessage",
             Condition: {
               ArnEquals: {
-                "aws:SourceArn": { Ref: "NotifyStoreTopic" },
+                "aws:SourceArn": { Ref: "OrderTopic" },
               },
             },
           },

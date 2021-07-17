@@ -6,8 +6,9 @@ import {
   orderTable,
   storeTable,
   notifyStoreQueue,
-  notifyStoreTopic,
+  orderTopic,
   orderStateMachine,
+  orderTopicSubscriptions,
 } from "@resources"
 
 const serverlessConfiguration: AWS = {
@@ -24,6 +25,7 @@ const serverlessConfiguration: AWS = {
     "serverless-export-env",
     "serverless-iam-roles-per-function",
     "serverless-step-functions",
+    "serverless-dotenv-plugin",
   ],
   provider: {
     name: "aws",
@@ -37,7 +39,7 @@ const serverlessConfiguration: AWS = {
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1",
       REGION: "${self:provider.region}",
-      KMS_KEY_ID: "REPLACE_ME",
+      KMS_KEY_ID: "${env:KMS_KEY_ID}",
       STORE_TABLE_NAME: "store-table-${self:provider.stage}",
       ORDER_TABLE_NAME: "order-table-${self:provider.stage}",
       ORDER_STATE_MACHINE_ARN:
@@ -91,7 +93,8 @@ const serverlessConfiguration: AWS = {
       ...storeTable,
       ...orderTable,
       ...notifyStoreQueue,
-      ...notifyStoreTopic,
+      ...orderTopic,
+      ...orderTopicSubscriptions,
     },
     Outputs: {
       OrderStateMachineARN: {

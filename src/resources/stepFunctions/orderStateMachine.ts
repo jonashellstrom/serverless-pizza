@@ -10,10 +10,16 @@ export const orderStateMachine = {
         OutputPath: "$",
         Resource: "arn:aws:states:::sns:publish.waitForTaskToken",
         Parameters: {
-          TopicArn: { Ref: "NotifyStoreTopic" },
+          TopicArn: { Ref: "OrderTopic" },
           Message: {
             "Input.$": "$",
             "TaskToken.$": "$$.Task.Token",
+          },
+          MessageAttributes: {
+            event: {
+              DataType: "String",
+              StringValue: "order_placed",
+            },
           },
         },
         Catch: [
@@ -26,7 +32,7 @@ export const orderStateMachine = {
       },
       MarkOrderAsConfirmed: {
         Type: "Task",
-        OutputPath: "$",
+        ResultPath: null,
         Resource: "arn:aws:states:::dynamodb:updateItem",
         Parameters: {
           TableName: { Ref: "OrderTable" },
