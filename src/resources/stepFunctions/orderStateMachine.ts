@@ -7,6 +7,7 @@ export const orderStateMachine = {
     States: {
       NotifyStore: {
         Type: "Task",
+        OutputPath: "$",
         Resource: "arn:aws:states:::sns:publish.waitForTaskToken",
         Parameters: {
           TopicArn: { Ref: "NotifyStoreTopic" },
@@ -21,12 +22,31 @@ export const orderStateMachine = {
             Next: "CancelOrder",
           },
         ],
-        Next: "StartOrder",
+        Next: "MarkOrderAsConfirmed",
       },
-      StartOrder: {
-        Type: "Succeed",
+      MarkOrderAsConfirmed: {
+        Type: "Task",
+        OutputPath: "$",
+        Resource: "arn:aws:states:::dynamodb:updateItem",
+        Parameters: {
+          TableName: { Ref: "OrderTable" },
+          Key: {
+            orderId: { "S.$": "$.orderId" },
+          },
+          UpdateExpression: "SET #status = :confirmed_by_store",
+          ExpressionAttributeNames: {
+            "#status": "status",
+          },
+          ExpressionAttributeValues: {
+            ":confirmed_by_store": { S: "confirmed_by_store" },
+          },
+        },
+        Next: "FinishOrder",
       },
       CancelOrder: {
+        Type: "Succeed",
+      },
+      FinishOrder: {
         Type: "Succeed",
       },
     },
