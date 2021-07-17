@@ -10,7 +10,16 @@ import {
 import { DeliveryOrder, OrderStatus } from "@types"
 
 import inputSchema from "./schema"
-import { DirectionsService, orderDb, storeDb } from "@services"
+import {
+  DirectionsService,
+  orderDb,
+  storeDb,
+  StateMachineService,
+} from "@services"
+
+const orderStateMachine = new StateMachineService(
+  process.env.ORDER_STATE_MACHINE_ARN
+)
 
 const placeOrder: ValidatedEventAPIGatewayProxyEvent<typeof inputSchema> =
   async ({ body: { storeId, paymentId, pies, deliveryAddress } }) => {
@@ -39,8 +48,10 @@ const placeOrder: ValidatedEventAPIGatewayProxyEvent<typeof inputSchema> =
     const preparationTimeInSeconds = 900
     const totalTimeInSeconds = deliveryTimeInSeconds + preparationTimeInSeconds
 
+    const orderId = nanoid()
+
     const order: DeliveryOrder = {
-      orderId: nanoid(),
+      orderId,
       storeId,
       status: OrderStatus.initiated,
       pies,
@@ -58,7 +69,10 @@ const placeOrder: ValidatedEventAPIGatewayProxyEvent<typeof inputSchema> =
 
     await orderDb.save(order)
 
-    // TODO: start order orchestrator
+    await orderStateMachine.start({
+      name: orderId,
+      input: { orderId: order.orderId, storeId: order.storeId },
+    })
 
     return formatJSONResponse(
       {

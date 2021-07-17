@@ -134,6 +134,6 @@ Provide the store id, the payment id, an array of pies and the delivery address 
 
 ```json
 {
-  "name": "Invalid request body"
+  "message": "Invalid request body"
 }
 ```

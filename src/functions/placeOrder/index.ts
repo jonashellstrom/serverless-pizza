@@ -15,12 +15,17 @@ export default {
       Action: ["dynamodb:PutItem"],
       Resource: [{ "Fn::GetAtt": ["OrderTable", "Arn"] }],
     },
+    {
+      Effect: "Allow",
+      Action: ["states:startExecution"],
+      Resource: [{ Ref: "OrderStateMachine" }],
+    },
   ],
   events: [
     {
       http: {
         method: "post",
-        path: "place-order",
+        path: "order",
         request: {
           schema: {
             "application/json": schema,
