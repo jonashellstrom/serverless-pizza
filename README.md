@@ -43,3 +43,4 @@ aws dynamodb put-item \
 These endpoints provide functionality to create new orders, track the status of an existing order and adding a tip to an existing order.
 
 - [Place New Order](docs/rest-api/place-order.md) : `POST /order/`
+- [Accept or Decline Order](docs/rest-api/order-decision.md) : `POST /order/decision/`
