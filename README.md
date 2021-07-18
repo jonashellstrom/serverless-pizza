@@ -45,3 +45,4 @@ These endpoints provide functionality to create new orders as a customer, accept
 - [Place New Order](docs/rest-api/place-order.md) : `POST /order/`
 - [Accept or Decline Order](docs/rest-api/order-decision.md) : `POST /order/decision/`
 - [Pickup Order](docs/rest-api/pickup.md) : `POST /order/pickup/`
+- [Get Order](docs/rest-api/get-order.md) : `GET /order/<orderId>?party=<orderParty>/`

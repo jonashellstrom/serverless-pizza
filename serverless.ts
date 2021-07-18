@@ -4,6 +4,7 @@ import placeOrder from "@functions/placeOrder"
 import orderDecision from "@functions/orderDecision"
 import handleWaitForPickup from "@functions/handleWaitForPickup"
 import pickup from "@functions/pickup"
+import getOrder from "@functions/getOrder"
 import {
   orderTable,
   storeTable,
@@ -87,7 +88,13 @@ const serverlessConfiguration: AWS = {
       },
     ],
   },
-  functions: { placeOrder, orderDecision, handleWaitForPickup, pickup },
+  functions: {
+    placeOrder,
+    orderDecision,
+    handleWaitForPickup,
+    pickup,
+    getOrder,
+  },
   // @ts-ignore
   stepFunctions: {
     stateMachines: { orderStateMachine },
