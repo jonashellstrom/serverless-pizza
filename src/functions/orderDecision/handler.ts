@@ -27,7 +27,7 @@ const orderDecision: ValidatedEventAPIGatewayProxyEvent<typeof inputSchema> =
       if (accepted) {
         await orderStateMachine.sendTaskSuccess({
           taskToken,
-          output: { orderId: orderId, storeId: storeId },
+          output: { orderId, storeId },
         })
       } else {
         console.info(`Order declined reason: ${declinedReason}`)
