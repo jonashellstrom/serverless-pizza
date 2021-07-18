@@ -2,6 +2,7 @@ import type { AWS } from "@serverless/typescript"
 
 import placeOrder from "@functions/placeOrder"
 import orderDecision from "@functions/orderDecision"
+import handleWaitForPickup from "@functions/handleWaitForPickup"
 import {
   orderTable,
   storeTable,
@@ -28,6 +29,7 @@ const serverlessConfiguration: AWS = {
     "serverless-step-functions",
     "serverless-dotenv-plugin",
   ],
+  useDotenv: true,
   provider: {
     name: "aws",
     region: "ca-central-1",
@@ -84,7 +86,7 @@ const serverlessConfiguration: AWS = {
       },
     ],
   },
-  functions: { placeOrder, orderDecision },
+  functions: { placeOrder, orderDecision, handleWaitForPickup },
   // @ts-ignore
   stepFunctions: {
     stateMachines: { orderStateMachine },

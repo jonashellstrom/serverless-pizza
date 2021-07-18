@@ -39,8 +39,30 @@ const getById = async (orderId: string): Promise<OrderModel | null> => {
     return null
   }
 }
+const addPickupTaskToken = async (
+  orderId: string,
+  taskToken: string
+): Promise<void> => {
+  try {
+    await dynamodb
+      .update({
+        TableName: tableName,
+        Key: {
+          orderId,
+        },
+        UpdateExpression: "SET pickUpTaskToken = :taskToken",
+        ExpressionAttributeValues: {
+          ":taskToken": taskToken,
+        },
+      })
+      .promise()
+  } catch (error) {
+    console.error("Error updating order with pickup details: ", error)
+  }
+}
 
 export default {
   save,
   getById,
+  addPickupTaskToken,
 }

@@ -38,6 +38,7 @@ export type DeliveryOrder = Order & {
   deliveryEstimatedAt: TimestampInISO
   deliveredAt: TimestampInISO | null
   deliverySteps: Step[]
+  pickUpTaskToken: string
 }
 
 export type PickupOrder = Order & {
