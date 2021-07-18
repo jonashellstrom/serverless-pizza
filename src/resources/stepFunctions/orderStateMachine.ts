@@ -25,12 +25,12 @@ export const orderStateMachine = {
         Catch: [
           {
             ErrorEquals: ["OrderDeclined"],
-            Next: "MarkOrderAsDeclined",
+            Next: "MarkAsDeclined",
           },
         ],
-        Next: "MarkOrderAsAccepted",
+        Next: "MarkAsAccepted",
       },
-      MarkOrderAsAccepted: {
+      MarkAsAccepted: {
         Type: "Task",
         ResultPath: null,
         Resource: "arn:aws:states:::dynamodb:updateItem",
@@ -49,7 +49,7 @@ export const orderStateMachine = {
         },
         Next: "NotifyDriver",
       },
-      MarkOrderAsDeclined: {
+      MarkAsDeclined: {
         Type: "Task",
         ResultPath: null,
         Resource: "arn:aws:states:::dynamodb:updateItem",
@@ -70,7 +70,7 @@ export const orderStateMachine = {
       },
       NotifyDriver: {
         Type: "Task",
-        OutputPath: "$",
+        ResultPath: null,
         Resource: "arn:aws:states:::sns:publish",
         Parameters: {
           TopicArn: { Ref: "OrderTopic" },
@@ -82,6 +82,39 @@ export const orderStateMachine = {
               DataType: "String",
               StringValue: "order_started",
             },
+          },
+        },
+        Next: "WaitForPickup",
+      },
+      WaitForPickup: {
+        Type: "Task",
+        Resource: "arn:aws:states:::lambda:invoke.waitForTaskToken",
+        Parameters: {
+          FunctionName: "serverless-pizza-dev-handleWaitForPickup",
+          Payload: {
+            body: {
+              "orderId.$": "$.orderId",
+              "taskToken.$": "$$.Task.Token",
+            },
+          },
+        },
+        Next: "MarkAsOutForDelivery",
+      },
+      MarkAsOutForDelivery: {
+        Type: "Task",
+        ResultPath: null,
+        Resource: "arn:aws:states:::dynamodb:updateItem",
+        Parameters: {
+          TableName: { Ref: "OrderTable" },
+          Key: {
+            orderId: { "S.$": "$.orderId" },
+          },
+          UpdateExpression: "SET #status = :out_for_delivery",
+          ExpressionAttributeNames: {
+            "#status": "status",
+          },
+          ExpressionAttributeValues: {
+            ":out_for_delivery": { S: "out_for_delivery" },
           },
         },
         Next: "FinishOrder",
