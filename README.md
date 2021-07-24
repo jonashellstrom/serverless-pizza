@@ -1,5 +1,9 @@
 # Serverless Pizza 🍕
 
+## Description
+
+A pizza ordering Step Function orchestrator that coordinates the ordering and hand-offs to store and driver throughout the life cycle of an order. The application exposes a REST API for client interaction. Built using Serverless with AWS services including Step Functions, DynamoDB, SNS and SQS.
+
 ## Installation/deployment instructions
 
 Depending on your preferred package manager, follow the instructions below to deploy the project.
@@ -15,6 +19,48 @@ Depending on your preferred package manager, follow the instructions below to de
 
 - Run `yarn` to install the project dependencies
 - Run `yarn sls deploy` to deploy the stack to AWS
+
+## Directory Structure
+
+<details>
+     <summary> Click to expand </summary>
+  
+```
+├── AWSCLIV2.pkg
+├── README.md
+├── docs
+│   ├── orchestrator
+│   └── rest-api
+├── package-lock.json
+├── package.json
+├── serverless.ts
+├── src
+│   ├── functions
+│   │   ├── getOrder
+│   │   ├── handleWaitForPickup
+│   │   ├── orderDecision
+│   │   ├── pickup
+│   │   └── placeOrder
+│   ├── resources
+│   │   ├── dynamoDb
+│   │   ├── index.ts
+│   │   ├── sns
+│   │   ├── sqs
+│   │   └── stepFunctions
+│   ├── services
+│   │   ├── database
+│   │   ├── directions
+│   │   ├── index.ts
+│   │   ├── network
+│   │   └── stateMachine
+│   ├── types
+│   └── utils
+├── tsconfig.json
+├── tsconfig.paths.json
+└── webpack.config.js
+```
+
+</details>
 
 ## Seeding the Store Table
 
@@ -46,3 +92,22 @@ These endpoints provide functionality to create new orders as a customer, accept
 - [Accept or Decline Order](docs/rest-api/order-decision.md) : `POST /order/decision/`
 - [Pickup Order](docs/rest-api/pickup.md) : `POST /order/pickup/`
 - [Get Order](docs/rest-api/get-order.md) : `GET /order/<orderId>?party=<orderParty>/`
+
+## Order Orchestrator
+
+- Customer places an order using the `POST /order/` endpoint.
+- The order is saved in DynamoDB.
+- Step Function kicks off.
+- Store is notified through SNS (using any subscription option like SQS, email or text message). In this example, SQS is used. A task token is used to pause the orchestrator execution until a decision is made.
+- Store makes decision to either accept or decline order using the `POST /order/decision/` endpoint.
+- If store declines the order, it is marked as declined in DynamoDB and the orchestrator ends early.
+- If store accepts the order, it is marked as such in DynamoDB and the driver is notified of the new order through SNS.
+- The `waitForPickup` lambda is invoked with a task token that is stored on the order in DynamoDB. Execution is paused until the order is picked up using the `POST order/pickup/` endpoint and the task token is sent back to the Step Function.
+- The order is marked as out for delivery in DynamoDB.
+
+![Order Step Function Diagram](docs/orchestrator/order-orchestrator.png)
+
+## Some potential improvements:
+
+- The option exists to buffer the SF executions as the limit for `startExecution` calls is relatively low. An potential improvemnt would be to put SQS and Lambda in front of the starting point to control concurrency in a scenario where the number of incoming request is high.
+- Could connect a DynamoDB stream off the order table and connect it to a Lambda with a stream event that generates push notifications to the customer everytime there is an update to the status of their order.
